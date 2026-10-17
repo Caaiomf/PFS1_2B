@@ -25,12 +25,12 @@ class ProdutoController {
     }
     async cadastrarProduto(req, res){
         var ok = true;
-        if(req.body.codigo != "" && req.body.nome != "" && 
+        if(req.body.valor > 0 && req.body.codigo != "" && req.body.nome != "" && 
         req.body.quantidade != "" && req.body.quantidade  != '0' && 
         req.body.marca != '0' && req.body.categoria  != '0' && req.file != null) {
             let produto = new ProdutoModel(0, req.body.codigo, 
                 req.body.nome, req.body.quantidade, 
-                req.body.categoria, req.body.marca, "", "", req.file.buffer);
+                req.body.categoria, req.body.marca, "", "", req.file.buffer, req.body.valor);
 
             ok = await produto.gravar();
         }

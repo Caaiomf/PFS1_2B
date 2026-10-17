@@ -12,6 +12,7 @@ class ProdutoModel {
     #categoriaNome;
     #marcaId;
     #marcaNome;
+    #produtoValor;
 
     get produtoId() { return this.#produtoId; } set produtoId(produtoId) {this.#produtoId = produtoId;}
     get produtoCodigo() { return this.#produtoCodigo; } set produtoCodigo(produtoCodigo) {this.#produtoCodigo = produtoCodigo;}
@@ -22,10 +23,11 @@ class ProdutoModel {
     get marcaId() { return this.#marcaId; } set marcaId(marcaId) {this.#marcaId = marcaId;}
     get marcaNome() { return this.#marcaNome; } set marcaNome(marcaNome) {this.#marcaNome = marcaNome;}
     get produtoImagem() { return this.#produtoImagem; } set produtoImagem(produtoImagem) {this.#produtoImagem = produtoImagem;}
+    get produtoValor() { return this.#produtoValor; } set produtoValor(produtoValor) {this.#produtoValor = produtoValor;}
 
 
 
-    constructor(produtoId, produtoCodigo, produtoNome, produtoQuantidade, categoriaId, marcaId, categoriaNome, marcaNome, produtoImagem) {
+    constructor(produtoId, produtoCodigo, produtoNome, produtoQuantidade, categoriaId, marcaId, categoriaNome, marcaNome, produtoImagem, produtoValor) {
         this.#produtoId = produtoId
         this.#produtoCodigo = produtoCodigo
         this.#produtoNome = produtoNome
@@ -35,6 +37,7 @@ class ProdutoModel {
         this.#marcaId = marcaId;
         this.#marcaNome = marcaNome;
         this.#produtoImagem = produtoImagem;
+        this.#produtoValor = produtoValor;
     }
 
     async excluir(codigo){
@@ -48,9 +51,9 @@ class ProdutoModel {
 
     async gravar() {
         if(this.#produtoId == 0){
-            let sql = "insert into tb_produto (prd_cod, prd_nome, prd_quantidade, cat_id, mar_id, prd_imagem) values (?, ?, ?, ?, ?, ?)";
+            let sql = "insert into tb_produto (prd_cod, prd_nome, prd_quantidade, cat_id, mar_id, prd_imagem, prd_valor) values (?, ?, ?, ?, ?, ?, ?)";
 
-            let valores = [this.#produtoCodigo, this.#produtoNome, this.#produtoQuantidade, this.#categoriaId, this.#marcaId, this.#produtoImagem];
+            let valores = [this.#produtoCodigo, this.#produtoNome, this.#produtoQuantidade, this.#categoriaId, this.#marcaId, this.#produtoImagem, this.#produtoValor];
 
             return await conexao.ExecutaComandoNonQuery(sql, valores);
         }

@@ -25,10 +25,11 @@ function gravarProduto() {
     var inputQtde = document.getElementById("inputQtde");
     var selMarca = document.getElementById("selMarca");
     var selCategoria = document.getElementById("selCategoria");
-    var inputImagem = document.getElementById("inputImagem")
+    var inputImagem = document.getElementById("inputImagem");
+    var inputValor = document.getElementById("inputValor");
 
     //if de validação básica
-    if(inputCodigo.value != "" && inputNome.value != "" && inputQtde.value != "" && inputQtde.value != '0' && selMarca.value != '0' && selCategoria.value != '0' && inputImagem.files.length > 0){
+    if(inputValue.value > 0 && inputCodigo.value != "" && inputNome.value != "" && inputQtde.value != "" && inputQtde.value != '0' && selMarca.value != '0' && selCategoria.value != '0' && inputImagem.files.length > 0){
 
         // var data = {
         //     codigo: inputCodigo.value,
@@ -38,6 +39,7 @@ function gravarProduto() {
         //     categoria: selCategoria.value
         // }
         let formData = new FormData();
+        formData.append("valor", inputValor.value);
         formData.append("codigo", inputCodigo.value);
         formData.append("nome", inputNome.value);
         formData.append("quantidade", inputQtde.value);
