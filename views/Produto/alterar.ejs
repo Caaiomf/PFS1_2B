@@ -20,6 +20,10 @@
             <input type="number" value="<%= produtoAlter.produtoQuantidade %>" class="form-control" id="inputQtde">
         </div>
         <div class="form-group">
+          <label for="inputValor">Valor</label>
+          <input type="number" value="<%= produtoAlter.produtoValor %>" class="form-control" id="inputValor">
+        </div>
+        <div class="form-group">
           <label for="selMarca">Marca</label>
           <select class="form-control" id="selMarca">
             <option value="0">--Selecione--</option>
@@ -45,6 +49,17 @@
             <% } %>    
           </select>
         </div>
+        <div class="form-group">
+          <label>Imagem do Produto: </label>
+          <input class="form-control" type="file" id="inputImagem">
+        </div>
+        <div class="form-group" id="divPrevia" style="<%= produtoAlter.produtoImagem != '' ? '' : 'display:none;' %>">
+          <label> Previa da imagem </label>
+          <div>
+            <img width="250" id="previaImagem" src="<%= produtoAlter.produtoImagem %>">
+          </div>
+        </div>
+
         <div>
 
             <button class="btn btn-primary" type="button" id="btnAlterar">Alterar</button>

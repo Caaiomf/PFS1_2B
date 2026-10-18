@@ -29,7 +29,7 @@ function gravarProduto() {
     var inputValor = document.getElementById("inputValor");
 
     //if de validação básica
-    if(inputValue.value > 0 && inputCodigo.value != "" && inputNome.value != "" && inputQtde.value != "" && inputQtde.value != '0' && selMarca.value != '0' && selCategoria.value != '0' && inputImagem.files.length > 0){
+    if(inputValor.value > 0 && inputCodigo.value != "" && inputNome.value != "" && inputQtde.value != "" && inputQtde.value != '0' && selMarca.value != '0' && selCategoria.value != '0' && inputImagem.files.length > 0){
 
         // var data = {
         //     codigo: inputCodigo.value,

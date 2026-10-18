@@ -59,13 +59,19 @@ class ProdutoModel {
         }
         else{
             //alterar
-            let sql = "update tb_produto set prd_cod = ?, prd_nome =?, prd_quantidade= ?, cat_id = ?, mar_id = ?, prd_imagem = ? where prd_id = ?";
+            let sql ="";
+            let valores = [];
 
-            let valores = [this.#produtoCodigo, this.#produtoNome, 
-                this.#produtoQuantidade, 
-                this.#categoriaId, 
-                this.#marcaId, this.#produtoImagem, this.#produtoId];
+            if(this.#produtoImagem != null){
+                sql = "update tb_produto set prd_cod = ?, prd_nome = ?, prd_quantidade = ?, cat_id = ?, mar_id = ?, prd_valor = ?, prd_imagem = ? where prd_id = ?";
+                valores = [ this.#produtoCodigo, this.#produtoNome, this.#produtoQuantidade, this.#categoriaId, this.#marcaId, this.#produtoValor, this.#produtoImagem, this.#produtoId];
+            }else{
+                sql  ="update tb_produto set prd_cod = ?, prd_nome = ?, prd_quantidade = ?, cat_id = ?, mar_id = ?, prd_valor = ? where prd_id = ?";
+                valores = [
+                    this.#produtoCodigo, this.#produtoNome, this.#produtoQuantidade, this.#categoriaId, this.#marcaId, this.#produtoValor, this.#produtoId
+                ];
 
+            }
             return await conexao.ExecutaComandoNonQuery(sql, valores) > 0;
         }
     }
@@ -81,22 +87,15 @@ class ProdutoModel {
             var row = rows[0];
 
             let imagem = "";
-            
+            if(row["prd_imagem"] != null) {
+                imagem = "data:image/png;base64," + row["prd_imagem"].toString("base64");
+            }
+
             produto = new ProdutoModel(row['prd_id'], 
             row['prd_cod'], row['prd_nome'], row['prd_quantidade'], 
-            row['cat_id'], row['mar_id'], "", "");
-
-            if(row["prd_imagem"] != null) {
-                produto.imagem = global.CAMINHO_IMG_BROWSER + row["prd_imagem"];
-                produto.possuiImagem = true;
-            }
-            else {
-                produto.imagem = global.CAMINHO_IMG_BROWSER + "sem-foto.png";
-                produto.possuiImagem = false;
-            }
-
+            row['cat_id'], row['mar_id'], "", "", imagem, row['prd_valor']
+            );          
         }
-
         return produto;
     }
 

@@ -57,9 +57,13 @@ class ProdutoController {
 
     async alterarProduto(req, res) {
         var ok = true;
-        if(req.body.codigo != "" && req.body.nome != "" && req.body.quantidade != "" && req.body.quantidade  != '0' && req.body.marca != '0' && req.body.categoria  != '0') {
+        if(req.body.id > 0  && req.body.valor > 0 && req.body.codigo != "" && req.body.nome != "" && req.body.quantidade != "" && req.body.quantidade  != '0' && req.body.marca != '0' && req.body.categoria  != '0') {
+            let bufferImagem = null;
+            if(req.file != null){
+                bufferImagem = req.file.buffer;
+            }
 
-            let produto = new ProdutoModel(req.body.id, req.body.codigo, req.body.nome, req.body.quantidade, req.body.categoria, req.body.marca, "", "");
+            let produto = new ProdutoModel(req.body.id, req.body.codigo, req.body.nome, req.body.quantidade, req.body.categoria, req.body.marca, "", "", bufferImagem, req.body.valor);
             ok = await produto.gravar();
         }
         else{
