@@ -9,32 +9,7 @@ document.addEventListener("DOMContentLoaded", function(){
 })
 
 function adicionarCarrinho() {
-    var codigo = this.dataset.codigo;
-        if(codigo != ""){
-            var data = {
-                codigo: codigo
-            }
-            fetch("/vitrine/carrinho", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data)
-            })
-            .then(r=> {
-                return r.json();
-            })
-            .then(r=> {
-                if(r.ok){
-                    window.location.reload();
-                }
-                else{
-                    alert("Erro ao excluir produto");
-                }
-            })
-            .catch(e => {
-                console.log(e);
-            })
-    }
+    const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+    localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
 }
