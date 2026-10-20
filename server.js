@@ -8,6 +8,7 @@ const categoriaRoute = require('./routes/categoriaRoute');
 const usuarioRoute = require("./routes/usuarioRoute");
 const perfilRoute = require('./routes/perfilRoute');
 const loginRoute = require("./routes/loginRoute");
+const vitrineRoute = require("./routes/vitrineRoute")
 const cookieParser = require("cookie-parser");
 const AuthMiddleware = require('./middlewares/authMiddleware');
 const app = express();
@@ -29,6 +30,8 @@ app.use(cookieParser());
 //definindo as rotas que o nosso sistema vai reconhecer através da url do navegador
 app.use("/login", loginRoute);
 let auth = new AuthMiddleware();
+
+app.use("/vitrine", vitrineRoute);
 
 app.use(auth.verificarUsuarioLogado);
 

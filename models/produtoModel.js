@@ -121,7 +121,7 @@ class ProdutoModel {
 
                 listaRetorno.push(new ProdutoModel(row['prd_id'], 
                 row['prd_cod'], row['prd_nome'], row['prd_quantidade'], 
-                row['cat_id'], row['mar_id'], row['cat_nome'], row['mar_nome'], imagemBase64));
+                row['cat_id'], row['mar_id'], row['cat_nome'], row['mar_nome'], imagemBase64, row['prd_valor']));
             }
         }
 

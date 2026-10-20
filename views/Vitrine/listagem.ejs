@@ -1,0 +1,18 @@
+<h1>Vitrine</h1>
+
+
+<div>
+    <% for(let i = 0; i < lista.length; i++ ) { %>
+        <div> 
+            <% if(lista[i].produtoImagem != "") { %>
+                <img width="200" src="<%= lista[i].produtoImagem %>" />
+            <% } else { %>
+                <img width="200" src="/img/produto-sem-imagem.webp" />
+            <% } %>
+            <div><%= lista[i].produtoNome %></div>
+            <div><b>R$ <%= lista[i].produtoValor %></b></div>
+            <button data-codigo="<%= lista[i].produtoId %>" class="btnCarrinho">Adicionar ao carrinho</button> 
+            <hr>
+        </div>
+    <% } %>
+</div>
