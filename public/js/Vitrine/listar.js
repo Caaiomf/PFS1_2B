@@ -9,7 +9,10 @@ document.addEventListener("DOMContentLoaded", function(){
 })
 
 function adicionarCarrinho() {
+    var nomeProduto = this.dataset.codigo;
     const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+    carrinho.push(nomeProduto);
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
+    alert(`"${nomeProduto}" Foi adicionado ao carrinho!`);
 }
