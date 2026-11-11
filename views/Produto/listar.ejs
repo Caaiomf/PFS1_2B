@@ -22,12 +22,7 @@
                 <% lista.map(function(value, index) { %>
                     <tr>
                         <td>
-                            <% if(value.produtoImagem != "") { %>
-                                <img width="100" src="<%= value.produtoImagem %>" />
-                            <% } else { %>
-                                <img width="100" src="/img/produto-sem-imagem.webp" />
-                            <% } %>
-                            
+                            <img width="100" src="<%= value.produtoImagem %>" />                          
                         </td>
                         <td><%= value.produtoCodigo %></td>
                         <td><%= value.produtoNome %></td>

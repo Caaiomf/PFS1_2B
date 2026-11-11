@@ -1,4 +1,5 @@
 const Database = require('../db/database');
+const fs = require("fs");
 
 const conexao = new Database();
 class ProdutoModel {
@@ -7,12 +8,12 @@ class ProdutoModel {
     #produtoCodigo;
     #produtoNome;
     #produtoQuantidade;
+    #produtoValor;
     #produtoImagem;
     #categoriaId;
     #categoriaNome;
     #marcaId;
     #marcaNome;
-    #produtoValor;
 
     get produtoId() { return this.#produtoId; } set produtoId(produtoId) {this.#produtoId = produtoId;}
     get produtoCodigo() { return this.#produtoCodigo; } set produtoCodigo(produtoCodigo) {this.#produtoCodigo = produtoCodigo;}
@@ -59,19 +60,13 @@ class ProdutoModel {
         }
         else{
             //alterar
-            let sql ="";
-            let valores = [];
+            let sql = "update tb_produto set prd_cod = ?, prd_nome =?, prd_quantidade= ?, cat_id = ?, mar_id = ?, prd_imagem = ?, prd_valor = ? where prd_id = ?";
 
-            if(this.#produtoImagem != null){
-                sql = "update tb_produto set prd_cod = ?, prd_nome = ?, prd_quantidade = ?, cat_id = ?, mar_id = ?, prd_valor = ?, prd_imagem = ? where prd_id = ?";
-                valores = [ this.#produtoCodigo, this.#produtoNome, this.#produtoQuantidade, this.#categoriaId, this.#marcaId, this.#produtoValor, this.#produtoImagem, this.#produtoId];
-            }else{
-                sql  ="update tb_produto set prd_cod = ?, prd_nome = ?, prd_quantidade = ?, cat_id = ?, mar_id = ?, prd_valor = ? where prd_id = ?";
-                valores = [
-                    this.#produtoCodigo, this.#produtoNome, this.#produtoQuantidade, this.#categoriaId, this.#marcaId, this.#produtoValor, this.#produtoId
-                ];
+            let valores = [this.#produtoCodigo, this.#produtoNome, 
+                this.#produtoQuantidade, 
+                this.#categoriaId, 
+                this.#marcaId, this.#produtoImagem, this.produtoValor, this.#produtoId];
 
-            }
             return await conexao.ExecutaComandoNonQuery(sql, valores) > 0;
         }
     }
@@ -86,17 +81,36 @@ class ProdutoModel {
         if(rows.length > 0){
             var row = rows[0];
 
+            //armazenamento em diretório
             let imagem = "";
-            if(row["prd_imagem"] != null) {
-                imagem = "data:image/png;base64," + row["prd_imagem"].toString("base64");
+            if(row["prd_imagem"] != null && 
+                fs.existsSync(global.CAMINHO_IMG_ABS + row["prd_imagem"])) {
+                imagem = global.CAMINHO_IMG + row["prd_imagem"];
             }
-
+            else {
+                imagem = global.CAMINHO_IMG + "produto-sem-imagem.webp";
+            }
+                    
+            
             produto = new ProdutoModel(row['prd_id'], 
             row['prd_cod'], row['prd_nome'], row['prd_quantidade'], 
-            row['cat_id'], row['mar_id'], "", "", imagem, row['prd_valor']
-            );          
+            row['cat_id'], row['mar_id'], "", "", imagem, row["prd_valor"]);
+
         }
+
         return produto;
+    }
+
+    async atualizarEstoque(produtoId, novaQuantidade){
+        let sql = "update tb_produto set prd_quantidade = ? where prd_id = ?";
+        let valores = [novaQuantidade, produtoId];
+        return await conexao.ExecutaComandoNonQuery(sql,valores);
+    }
+    async validarEstoque(produtoId, quantidade){
+        let sql = "select * from tb_produto where prd_id = ? and prd_quantidade >= ?";
+        let valores = [produtoId, quantidade];
+        let rows = await conexao.ExecutaComando(sql,valores);
+        return rows.length > 0;
     }
 
     async listarProdutos() {
@@ -112,20 +126,40 @@ class ProdutoModel {
 
                 var row = rows[i];
 
-                //converter binário da imagem em base64
-                let imagemBase64 = "";
-                if(row["prd_imagem"] != null) {
-                    imagemBase64 = "data:image/png;base64," + row["prd_imagem"].toString("base64");
+                //converter binário da imagem em base64 (armazenamento em banco)
+                // let imagemBase64 = "";
+                // if(row["prd_imagem"] != null) {
+                //     imagemBase64 = "data:image/png;base64," + row["prd_imagem"].toString("base64");
+                // }
+
+                //armazenamento em diretório
+                let imagem = "";
+                if(row["prd_imagem"] != null 
+                    && 
+                fs.existsSync(global.CAMINHO_IMG_ABS + row["prd_imagem"])) {
+                    imagem = global.CAMINHO_IMG + row["prd_imagem"];
+                }
+                else {
+                    imagem = global.CAMINHO_IMG + "produto-sem-imagem.webp";
                 }
                     
 
                 listaRetorno.push(new ProdutoModel(row['prd_id'], 
                 row['prd_cod'], row['prd_nome'], row['prd_quantidade'], 
-                row['cat_id'], row['mar_id'], row['cat_nome'], row['mar_nome'], imagemBase64, row['prd_valor']));
+                row['cat_id'], row['mar_id'], row['cat_nome'], row['mar_nome'], imagem, row["prd_valor"]));
             }
         }
 
         return listaRetorno;
+    }
+
+    toJSON() {
+        return {
+            id: this.#produtoId,
+            nome: this.#produtoNome,
+            preco: this.#produtoValor,
+            imagem: this.#produtoImagem
+        }
     }
 
 }

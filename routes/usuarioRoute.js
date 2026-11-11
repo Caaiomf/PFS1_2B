@@ -1,9 +1,9 @@
-const express = require("express");
+const express = require('express');
 const UsuarioController = require('../controllers/usuarioController');
 
-let router = express.Router();
-
 let ctrl = new UsuarioController();
+
+let router = express.Router();
 router.get('/',ctrl.listagemView);
 router.get('/cadastrar',ctrl.cadastroView);
 router.post('/cadastrar',ctrl.cadastrar);

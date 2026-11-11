@@ -25,12 +25,12 @@ class ProdutoController {
     }
     async cadastrarProduto(req, res){
         var ok = true;
-        if(req.body.valor > 0 && req.body.codigo != "" && req.body.nome != "" && 
+        if(req.body.codigo != "" && req.body.nome != "" && 
         req.body.quantidade != "" && req.body.quantidade  != '0' && 
-        req.body.marca != '0' && req.body.categoria  != '0' && req.file != null) {
+        req.body.marca != '0' && req.body.categoria  != '0' && req.file != null && req.body.preco != "") {
             let produto = new ProdutoModel(0, req.body.codigo, 
                 req.body.nome, req.body.quantidade, 
-                req.body.categoria, req.body.marca, "", "", req.file.buffer, req.body.valor);
+                req.body.categoria, req.body.marca, "", "", req.file.filename, req.body.preco);
 
             ok = await produto.gravar();
         }
@@ -57,13 +57,25 @@ class ProdutoController {
 
     async alterarProduto(req, res) {
         var ok = true;
-        if(req.body.id > 0  && req.body.valor > 0 && req.body.codigo != "" && req.body.nome != "" && req.body.quantidade != "" && req.body.quantidade  != '0' && req.body.marca != '0' && req.body.categoria  != '0') {
-            let bufferImagem = null;
-            if(req.file != null){
-                bufferImagem = req.file.buffer;
+        if(req.body.codigo != "" && req.body.nome != "" && req.body.quantidade != "" && req.body.quantidade  != '0' && req.body.marca != '0' && req.body.categoria  != '0') {
+
+            let produto = new ProdutoModel(req.body.id, req.body.codigo, req.body.nome, req.body.quantidade, req.body.categoria, req.body.marca, "", "", "", req.body.preco);
+            let produtoOld = await produto.buscarProduto(req.body.id);
+            if(req.file != null) {
+                //veio imagem, deletar a antiga;
+                let nomeImg = produtoOld.produtoImagem.split("/").pop();
+                if(fs.existsSync(global.CAMINHO_IMG_ABS + nomeImg)) {
+                    fs.unlinkSync(global.CAMINHO_IMG_ABS + nomeImg)
+                }
+                // o produto que será alterado recebe a nova referência
+                produto.produtoImagem = req.file.filename;
+            }
+            else {
+                //não veio imagem, manter a mesma;
+                produto.produtoImagem = produtoOld.produtoImagem.split("/").pop();
             }
 
-            let produto = new ProdutoModel(req.body.id, req.body.codigo, req.body.nome, req.body.quantidade, req.body.categoria, req.body.marca, "", "", bufferImagem, req.body.valor);
+
             ok = await produto.gravar();
         }
         else{
@@ -85,6 +97,16 @@ class ProdutoController {
         listaCategorias = await categoria.listarCategorias();
 
         res.render('produto/cadastro', { listaMarcas: listaMarcas, listaCategorias: listaCategorias });
+    }
+
+    async obterProduto(req, res) {
+        //recebe o id do produto através da rota;
+        let produtoId = req.params.produto;
+
+        let produto = new ProdutoModel();
+        produto = await produto.buscarProduto(produtoId);
+
+        res.send({produto: produto})
     }
 }
 

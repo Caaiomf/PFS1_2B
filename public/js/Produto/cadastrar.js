@@ -23,13 +23,13 @@ function gravarProduto() {
     var inputCodigo = document.getElementById("inputCodigo");
     var inputNome = document.getElementById("inputNome");
     var inputQtde = document.getElementById("inputQtde");
+    var inputPreco = document.getElementById("inputPreco");
     var selMarca = document.getElementById("selMarca");
     var selCategoria = document.getElementById("selCategoria");
-    var inputImagem = document.getElementById("inputImagem");
-    var inputValor = document.getElementById("inputValor");
+    var inputImagem = document.getElementById("inputImagem")
 
     //if de validação básica
-    if(inputValor.value > 0 && inputCodigo.value != "" && inputNome.value != "" && inputQtde.value != "" && inputQtde.value != '0' && selMarca.value != '0' && selCategoria.value != '0' && inputImagem.files.length > 0){
+    if(inputCodigo.value != "" && inputNome.value != "" && inputQtde.value != "" && inputQtde.value != '0' && selMarca.value != '0' && selCategoria.value != '0' && inputImagem.files.length > 0 && inputPreco.value != ""){
 
         // var data = {
         //     codigo: inputCodigo.value,
@@ -39,9 +39,9 @@ function gravarProduto() {
         //     categoria: selCategoria.value
         // }
         let formData = new FormData();
-        formData.append("valor", inputValor.value);
         formData.append("codigo", inputCodigo.value);
-        formData.append("nome", inputNome.value);
+        formData.append("nome", inputNome.value);        
+        formData.append("preco", inputPreco.value);
         formData.append("quantidade", inputQtde.value);
         formData.append("marca", selMarca.value);
         formData.append("categoria", selCategoria.value);

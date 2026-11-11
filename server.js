@@ -8,7 +8,7 @@ const categoriaRoute = require('./routes/categoriaRoute');
 const usuarioRoute = require("./routes/usuarioRoute");
 const perfilRoute = require('./routes/perfilRoute');
 const loginRoute = require("./routes/loginRoute");
-const vitrineRoute = require("./routes/vitrineRoute")
+const pedidoRoute = require("./routes/pedidoRoute");
 const cookieParser = require("cookie-parser");
 const AuthMiddleware = require('./middlewares/authMiddleware');
 const app = express();
@@ -29,18 +29,19 @@ app.use(cookieParser());
 
 //definindo as rotas que o nosso sistema vai reconhecer através da url do navegador
 app.use("/login", loginRoute);
+app.use('/', homeRoute);
+app.use('/produto', produtoRoute);
+app.use("/pedido", pedidoRoute);
 let auth = new AuthMiddleware();
-
-app.use("/vitrine", vitrineRoute);
-
 app.use(auth.verificarUsuarioLogado);
 
-app.use('/', homeRoute)
-app.use('/produto', produtoRoute);
 app.use("/marcas", marcaRoute);
 app.use("/categorias", categoriaRoute);
 app.use("/usuarios", usuarioRoute);
 app.use("/perfis", perfilRoute);
+
+global.CAMINHO_IMG = "/img/produtos/";
+global.CAMINHO_IMG_ABS = __dirname + "/public/img/produtos/";
 
 //ponto de inicio do nosso servidor web
 const server = app.listen('5000', function() {

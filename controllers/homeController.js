@@ -1,3 +1,4 @@
+const ProdutoModel = require("../models/produtoModel");
 
 class HomeController {
 
@@ -5,8 +6,10 @@ class HomeController {
 
     }
 
-    homeView(req, res) {
-        res.render('home/index', {});
+    async homeView(req, res) {
+        let produto = new ProdutoModel();
+        let listaProdutos = await produto.listarProdutos();
+        res.render('home/index', {layout: false, produtos: listaProdutos});
     }
 }
 
